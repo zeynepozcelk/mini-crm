@@ -1,22 +1,23 @@
+// src/services/customerService.js
 const { Customer } = require('../models');
-const logger = require('../lib/logger');
 
-async function listCustomers() {
-  return Customer.findAll({
-    limit: 50 // TODO: pagination eksik
+exports.create = async (payload) => {
+  const created = await Customer.create({
+    firstName: payload.firstName,
+    lastName: payload.lastName,
+    phone: payload.phone,
+    email: payload.email,
+    address: payload.address
   });
-}
+  return created.toJSON();
+};
 
-async function createCustomer(payload) {
-  // TODO: veri normalizasyonu yok (telefon formatı, email vs.)
-  logger.info('Creating customer', { payload }); // fazla veri logluyor
-  const customer = await Customer.create(payload);
-  return customer;
-}
+exports.list = async () => {
+  const rows = await Customer.findAll({ order: [['id', 'ASC']] });
+  return rows.map((r) => r.toJSON());
+};
 
-// TODO: update & delete hiç yazılmamış
-
-module.exports = {
-  listCustomers,
-  createCustomer
+exports.getById = async (id) => {
+  const row = await Customer.findByPk(id);
+  return row ? row.toJSON() : null;
 };
