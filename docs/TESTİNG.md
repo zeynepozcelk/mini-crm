@@ -9,44 +9,43 @@ Bu doküman, Mini CRM projesinin kararlılığını ölçmek için uygulanan tes
 Sistem, gerçek veritabanına zarar vermemek adına izole bir test ortamında (`NODE_ENV=test`) koşturulmaktadır.
 
 * **Test Veritabanı:** `mini_crm_test` (Her test öncesi temizlenir).
-* **Kapsam:** Unit Tests (Birim), Integration Tests (Entegrasyon) ve End-to-End (Uçtan Uca).
+* **Kapsam:** Unit Tests (Birim), Integration Tests (Entegrasyon) ve ETL Doğrulama Testleri.
 
 ---
 
-## 2. Test Sonuçları Özeti
+## 2. Test Sonuçları ve Kapsama Raporu (Coverage)
 
-Yapılan testler sonucunda tüm ana modüller (Müşteri, Ürün, Sipariş, ETL) başarıyla doğrulanmıştır.
+Yapılan otomatik testler sonucunda ana modüllerin (Routes, Models) başarıyla doğrulandığı ve kod kapsama oranlarının hedeflenen seviyede olduğu saptanmıştır.
 
-**[GÖRSEL BURAYA: Terminalde 'npm test' çalıştırdığında çıkan yeşil tablolu ekran görüntüsünü koy]**
-*Görsel 1: Tüm test senaryolarının başarıyla (PASS) tamamlandığını gösteren konsol çıktısı.*
+![Test Kapsama Raporu](./rapor.jpg)
+*Görsel 1: Kod kapsama (Code Coverage) raporu ve birim test sonuçları.*
 
 ---
 
-## 3. Modüler Test Detayları
+## 3. ETL Süreci ve Hata Raporlama Testi
+
+Ödevin 8. maddesi kapsamında, dış kaynaklı (CSV) verilerin sisteme aktarımı sırasında bozuk veya eksik verilerin nasıl yönetildiği test edilmiştir. Yapılan testte, sistemin eksik veya hatalı formatlı verileri veritabanına yazmak yerine reddettiği ve sebepleriyle birlikte raporladığı doğrulanmıştır.
+
+![ETL Hata Raporu](./hatali_kayit.jpg)
+*Görsel 2: ETL scriptinin hatalı kayıtları tespit etme ve raporlama başarısı.*
+
+---
+
+## 4. Modüler Test Detayları
 
 ### A. API Entegrasyon Testleri (Integration)
-Express.js uç noktaları (Endpoints) üzerinde yapılan testlerde aşağıdaki senaryolar doğrulanmıştır:
+Express.js uç noktaları üzerinde yapılan testlerde aşağıdaki senaryolar doğrulanmıştır:
 * **Müşteri Modülü:** Yeni kayıt oluşturma, mükerrer e-posta kontrolü ve veri normalizasyonu.
-* **Ürün Modülü:** Fiyat güncellemeleri ve stok seviyesi değişimleri.
 * **Sipariş Modülü:** Stok kontrolü yapılması ve yetersiz stok durumunda siparişin reddedilmesi.
-
-**[GÖRSEL BURAYA: 'npm run test:coverage' komutu sonrası çıkan, kodun yüzde kaçının test edildiğini gösteren tabloyu koy]**
-*Görsel 2: Kod kapsama (Code Coverage) raporu.*
 
 ### B. ETL ve Veri Temizleme Testleri (Unit)
 Dışarıdan alınan CSV verilerinin sisteme uygun hale getirilmesi için yazılan temizleme (cleaner) fonksiyonları test edilmiştir:
 * Telefon numaralarındaki geçersiz karakterlerin ayıklanması.
-* Boş bırakılan zorunlu alanların tespiti ve loglanması.
+* Boş bırakılan zorunlu alanların (Ad, Email) tespiti.
 
 ---
 
-## 4. Hata Yönetimi ve Debugging
-
-Testler sırasında karşılaşılan hataların takibi için `winston-logger` entegrasyonu test edilmiş; hataların `logs/test_error.log` dosyasına doğru TraceID ile düştüğü onaylanmıştır.
-
----
-
-## 5. Testleri Manuel Çalıştırma
+## 5. Testleri Çalıştırma Komutları
 
 Projeyi değerlendiren eğitmen, aşağıdaki komutlarla testleri kendi ortamında tekrarlayabilir:
 
@@ -56,6 +55,3 @@ npm test
 
 # Detaylı kapsama raporu üretir
 npm run test:coverage
-
-# Sadece belirli bir dosyayı test eder (Örn: Siparişler)
-npm test orders.test.js
