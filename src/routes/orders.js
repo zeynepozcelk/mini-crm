@@ -1,13 +1,13 @@
-const express = require('express'); // Bu eksikse ekle
+const express = require("express"); // Bu eksikse ekle
 const router = express.Router();
-const OrderController = require('../controllers/orders'); // Sadece bir tane kalsın
+const OrderController = require("../controllers/orders"); // Sadece bir tane kalsın
 
 // ... geri kalan kodlar aynı kalsın
 
 // Listeleme
-router.get('/', OrderController.list);
+router.get("/", OrderController.list);
 
 // Sipariş Oluşturma
-router.post('/', OrderController.createValidators, OrderController.create);
+router.post("/", OrderController.createValidators, OrderController.create);
 
 module.exports = router;

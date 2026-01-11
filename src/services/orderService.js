@@ -1,4 +1,4 @@
-const { Order } = require('../models');
+const { Order } = require("../models");
 
 exports.create = async (payload) => {
   // Payload: { customerId, totalAmount, status }
@@ -7,7 +7,7 @@ exports.create = async (payload) => {
 };
 
 exports.list = async () => {
-  const rows = await Order.findAll({ order: [['id', 'DESC']] });
+  const rows = await Order.findAll({ order: [["id", "DESC"]] });
   return rows.map((r) => r.toJSON());
 };
 

@@ -1,5 +1,5 @@
 // src/services/customerService.js
-const { Customer } = require('../models');
+const { Customer } = require("../models");
 
 exports.create = async (payload) => {
   const created = await Customer.create({
@@ -7,13 +7,13 @@ exports.create = async (payload) => {
     lastName: payload.lastName,
     phone: payload.phone,
     email: payload.email,
-    address: payload.address
+    address: payload.address,
   });
   return created.toJSON();
 };
 
 exports.list = async () => {
-  const rows = await Customer.findAll({ order: [['id', 'ASC']] });
+  const rows = await Customer.findAll({ order: [["id", "ASC"]] });
   return rows.map((r) => r.toJSON());
 };
 
