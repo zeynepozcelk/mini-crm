@@ -1,21 +1,17 @@
-const app = require('./app');
-const { sequelize } = require('./models');
-const config = require('./config');
-const logger = require('./lib/logger');
+// src/server.js (örnek ilgili kısım)
+const express = require('express');
+const app = express();
 
-async function start() {
-  try {
-    await sequelize.authenticate();
-    logger.info('DB connection OK');
-    // await sequelize.sync(); // TODO: migrate mi sync mi kullanılacağı net değil
+// body parser
+app.use(express.json());
 
-    app.listen(config.app.port, () => {
-      logger.info(`Server listening on port ${config.app.port}`);
-    });
-  } catch (err) {
-    logger.error('Unable to start server', { err });
-    process.exit(1);
-  }
-}
+// diğer middleware'ler, logger vb.
 
-start();
+app.use('/api/customers', require('./routes/customers'));
+
+// hata handler, 404 vs.
+// server start
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server listening on ${port}`));
+
+module.exports = app; // test için export et

@@ -1,4 +1,4 @@
-// Not: Migration dosyasıyla birebir aynı değil, bilinçli tutarsızlık var.
+// src/models/customer.js
 module.exports = (sequelize, DataTypes) => {
   const Customer = sequelize.define('Customer', {
     id: {
@@ -8,33 +8,35 @@ module.exports = (sequelize, DataTypes) => {
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false // ama ETL verisinde boş gelebiliyor
+      allowNull: false,
+      field: 'first_name' // <--- KRİTİK EKLEME: Veritabanı sütun adı
     },
     lastName: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      field: 'last_name'  // <--- KRİTİK EKLEME: Veritabanı sütun adı
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: true // TODO: zorunlu mu olmalı kararlaştırılacak
+      allowNull: true
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
-      // TODO: uygun validator eklenmemiş
+      allowNull: true
     },
     address: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    // Migration'da yok:
     isActive: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
+      field: 'is_active' // <--- Bunu da garantiye alalım
     }
   }, {
     tableName: 'customers',
-    underscored: true
+    underscored: true, // Bu ayar timestamps (created_at) için kalsın
+    timestamps: true
   });
 
   return Customer;
