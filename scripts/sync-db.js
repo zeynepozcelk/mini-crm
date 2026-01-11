@@ -1,19 +1,45 @@
-// scripts/sync-db.js
-// Development için: modelleri DB ile senkronize eder.
-const path = require('path');
-const models = require(path.join(__dirname, '..', 'src', 'models'));
+// src/models/index.js
+const { Sequelize } = require("sequelize");
+const path = require("path");
+const logger = require("../lib/logger");
 
-async function sync() {
-  try {
-    await models.sequelize.authenticate();
-    console.log('DB connection OK');
-    await models.sequelize.sync({ alter: true });
-    console.log('Models synchronized (alter: true).');
-    process.exit(0);
-  } catch (err) {
-    console.error('Error syncing DB:', err);
-    process.exit(1);
-  }
+// Çalışma ortamını al (development/test/production)
+const env = process.env.NODE_ENV || "development";
+
+// config.json dosyasını güvenli yoldan yükle
+const configData = require(path.resolve(__dirname, "../config.json"));
+const config = configData[env]; 
+
+let sequelize;
+
+// Veritabanı bağlantısını kur
+if (config.use_env_variable && process.env[config.use_env_variable]) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+      host: config.host,
+      port: config.port || 5432,
+      dialect: config.dialect || "postgres",
+      logging: (msg) => logger.debug(msg),
+      ...config 
+    }
+  );
 }
 
-sync();
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+// Modelleri yükle
+db.Customer = require("./customer")(sequelize, Sequelize.DataTypes);
+db.Order = require("./order")(sequelize, Sequelize.DataTypes);
+
+// İlişkileri tanımla (1 Müşteri -> N Sipariş)
+db.Customer.hasMany(db.Order, { foreignKey: "customerId" });
+db.Order.belongsTo(db.Customer, { foreignKey: "customerId" });
+
+module.exports = db;
