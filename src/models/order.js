@@ -7,22 +7,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     customerId: {
       type: DataTypes.INTEGER,
-      allowNull: false
-      // TODO: foreign key constraint migration tarafında eksik gibi
+      allowNull: false,
+      field: 'customer_id' // <--- KRİTİK: Veritabanındaki snake_case karşılığı
     },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'pending' // müşteri 'hazırlanıyor' demişti, sync değil
+      defaultValue: 'pending'
     },
     totalAmount: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: true // nullable bırakılmış
+      allowNull: true,
+      field: 'total_amount' // <--- KRİTİK: Veritabanındaki snake_case karşılığı
     },
-    // TODO: sipariş kalemleri için ayrı tablo düşünülmüş ama yapılmamış
   }, {
     tableName: 'orders',
-    underscored: true
+    underscored: true,
+    timestamps: true
   });
 
   return Order;

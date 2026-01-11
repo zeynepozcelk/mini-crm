@@ -6,11 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "sync-db": "node scripts/sync-db.js",
-    "test": "jest --runInBand --detectOpenHandles",
-    "migrate": "npx sequelize-cli db:migrate",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo:all",
-    "lint": "eslint . --ext .js"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "dotenv": "^16.4.0",

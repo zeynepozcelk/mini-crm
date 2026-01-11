@@ -1,23 +1,13 @@
-const express = require('express');
+const express = require('express'); // Bu eksikse ekle
 const router = express.Router();
-const { Order } = require('../models');
-const logger = require('../lib/logger');
+const OrderController = require('../controllers/orders'); // Sadece bir tane kalsın
 
-// TODO: servis katmanı düşünülmüş ama direkt model kullanılmış
-router.get('/', async (req, res, next) => {
-  try {
-    const orders = await Order.findAll({
-      limit: 20
-      // TODO: filtreleme (status, customer vs.) yok
-    });
-    res.json(orders);
-  } catch (err) {
-    logger.error('Error listing orders', { err });
-    next(err);
-  }
-});
+// ... geri kalan kodlar aynı kalsın
 
-// TODO: POST /api/orders - sipariş oluşturma
-// Müşteri yokken sipariş oluşturma senaryosu hiç ele alınmamış
+// Listeleme
+router.get('/', OrderController.list);
+
+// Sipariş Oluşturma
+router.post('/', OrderController.createValidators, OrderController.create);
 
 module.exports = router;
